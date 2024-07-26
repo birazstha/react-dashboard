@@ -1,13 +1,14 @@
 import Sidebar from "./Sidebar";
 import { menus } from "../menus";
 import { Link, Outlet } from "react-router-dom";
+import SearchField from "./SearchField";
 
 export default function Master() {
   return (
     <>
       <div className="min-h-screen mx-auto flex h-full">
         <div className="bg bg-[#353535] w-[420px]">
-          <div className="flex items-center justify-center p-3 mb-2 h-[80px] border-b border-white">
+          <div className="flex items-center justify-center p-3 mb-2 h-[60px] border-b border-gray-500">
             <p className="font-bold text-2xl text-white ">
               <Link to="/">FRIENDS MANAGEMENT</Link>
             </p>
@@ -15,7 +16,7 @@ export default function Master() {
           <Sidebar menus={menus} />
         </div>
         <div className="w-full ">
-          <div className="p-3 h-[80px] flex items-center justify-between">
+          <div className="p-3 h-[60px] flex items-center justify-between ">
             <ul className="flex gap-3">
               <li>
                 <a href="/">Home</a>
@@ -25,15 +26,10 @@ export default function Master() {
               </li>
             </ul>
             <div>
-              <input
-                type="text"
-                className="p-2 bg-[#ededed] h-[35px] rounded-md shadow-sm bg-white text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-
-              <button>Search</button>
+              <SearchField />
             </div>
           </div>
-          <div className="p-3">
+          <div className="p-3 bg-[#ebeaea] min-h-screen">
             <Outlet />
           </div>
         </div>
