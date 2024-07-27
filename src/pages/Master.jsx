@@ -1,7 +1,7 @@
-import Sidebar from "./Sidebar";
+import Sidebar from "../components/Sidebar";
 import { menus } from "../menus";
 import { Link, Outlet } from "react-router-dom";
-import SearchField from "./SearchField";
+import SearchField from "../components/SearchField";
 
 export default function Master() {
   return (

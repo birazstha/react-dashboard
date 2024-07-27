@@ -2,10 +2,10 @@
 import {createBrowserRouter} from 'react-router-dom';
 import Friends from './components/Friends';
 import Dashboard from './components/Dashboard';
-import Master from './components/Master';
+import Master from './pages/Master';
 import CategoryList from './pages/categories/index';
-import Signin from './pages/authentication/Signin';
-import Signup from './pages/authentication/Signup';
+import Signin, {loginAction} from './pages/authentication/Signin';
+import Signup, {signupAction} from './pages/authentication/Signup';
 
 const router = createBrowserRouter ([
   {
@@ -29,10 +29,12 @@ const router = createBrowserRouter ([
   {
     path: '/login',
     element: <Signin />,
+    action: loginAction,
   },
   {
     path: '/signup',
     element: <Signup />,
+    // action: signupAction,
   },
 ]);
 
