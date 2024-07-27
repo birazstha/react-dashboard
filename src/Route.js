@@ -4,6 +4,8 @@ import Friends from './components/Friends';
 import Dashboard from './components/Dashboard';
 import Master from './components/Master';
 import CategoryList from './pages/categories/index';
+import Signin from './pages/authentication/Signin';
+import Signup from './pages/authentication/Signup';
 
 const router = createBrowserRouter ([
   {
@@ -11,7 +13,7 @@ const router = createBrowserRouter ([
     element: <Master />,
     children: [
       {
-        path: '/',
+        index: true,
         element: <Dashboard />,
       },
       {
@@ -23,6 +25,14 @@ const router = createBrowserRouter ([
         element: <CategoryList />,
       },
     ],
+  },
+  {
+    path: '/login',
+    element: <Signin />,
+  },
+  {
+    path: '/signup',
+    element: <Signup />,
   },
 ]);
 
