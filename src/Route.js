@@ -1,16 +1,22 @@
 // route.js
-import {createBrowserRouter} from 'react-router-dom';
+import {createBrowserRouter, redirect} from 'react-router-dom';
 import Friends from './components/Friends';
 import Dashboard from './components/Dashboard';
-import Master from './pages/Master';
+import Master, {profilerLoader} from './pages/Master';
 import CategoryList from './pages/categories/index';
-import Signin, {loginAction} from './pages/authentication/Signin';
-import Signup, {signupAction} from './pages/authentication/Signup';
+import Signin from './pages/authentication/Signin';
+import Signup from './pages/authentication/Signup';
+import ErrorPage from './pages/ErrorPage';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const router = createBrowserRouter ([
   {
     path: '/',
     element: <Master />,
+    loader: profilerLoader,
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
@@ -29,11 +35,31 @@ const router = createBrowserRouter ([
   {
     path: '/login',
     element: <Signin />,
-    action: loginAction,
   },
   {
     path: '/signup',
     element: <Signup />,
+  },
+  {
+    path: '/logout',
+    loader: async () => {
+      const url = `${apiUrl}/logout`;
+      console.log (url);
+      const accessToken = localStorage.getItem ('accessToken');
+      const headers = {
+        Authorization: `Bearer ${accessToken}`,
+      };
+
+      try {
+        await axios.post (url, {}, {headers});
+        localStorage.removeItem ('accessToken');
+        toast.success ('Logout successfully');
+        return redirect ('/login');
+      } catch (err) {
+        console.error ('Logout failed:', err);
+        return null;
+      }
+    },
   },
 ]);
 

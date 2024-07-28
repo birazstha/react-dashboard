@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import Input from "../../components/Input";
 import { Form, Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
@@ -8,20 +8,22 @@ import { basicSchema } from "../../schemas";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
-// Shared function for handling signup
 const handleSignup = async (data) => {
   const url = `${apiUrl}/signup`;
   try {
     const res = await axios.post(url, data);
     if (res.status === 201) {
-      toast.success("Signup successful!"); // Show success toast
-      return { success: true }; // Indicate success
-    } else if (res.status === 422) {
-      return { success: false, errors: res.data }; // Return server-side validation errors
+      toast.success("Signup successful!");
+      return { success: true };
     }
   } catch (error) {
     if (error.response && error.response.status === 422) {
-      return { success: false, errors: error.response.data }; // Return server-side validation errors
+      return { success: false, errors: error.response.data.errors };
+    }
+
+    if (error.response && error.response.status === 500) {
+      toast.error("Server error");
+      return { success: false }; // Handle server error
     }
   }
   return { success: false }; // Indicate failure
@@ -30,7 +32,8 @@ const handleSignup = async (data) => {
 // Signup component
 export default function Signup() {
   const navigate = useNavigate();
-  const [serverErrors, setServerErrors] = React.useState(null);
+  const [serverErrors, setServerErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false); // Track submission state
 
   const formik = useFormik({
     initialValues: {
@@ -43,12 +46,14 @@ export default function Signup() {
     },
     validationSchema: basicSchema,
     onSubmit: async (values) => {
-      setServerErrors(null); // Clear previous errors
+      setServerErrors({});
+      setIsSubmitting(true);
       const result = await handleSignup(values);
+      setIsSubmitting(false);
       if (result.success) {
-        navigate("/success"); // Redirect or take some other action
+        navigate("/login");
       } else {
-        setServerErrors(result.errors); // Set errors to be displayed
+        setServerErrors(result.errors || {});
       }
     },
   });
@@ -71,8 +76,7 @@ export default function Signup() {
           <Input
             name="name"
             errors={
-              formik.touched.name &&
-              (formik.errors.name || (serverErrors && serverErrors.name))
+              formik.touched.name && (formik.errors.name || serverErrors.name)
             }
             value={formik.values.name}
             onChange={formik.handleChange}
@@ -82,8 +86,7 @@ export default function Signup() {
             name="username"
             errors={
               formik.touched.username &&
-              (formik.errors.username ||
-                (serverErrors && serverErrors.username))
+              (formik.errors.username || serverErrors.username)
             }
             value={formik.values.username}
             onChange={formik.handleChange}
@@ -94,7 +97,7 @@ export default function Signup() {
             type="email"
             errors={
               formik.touched.email &&
-              (formik.errors.email || (serverErrors && serverErrors.email))
+              (formik.errors.email || serverErrors.email)
             }
             value={formik.values.email}
             onChange={formik.handleChange}
@@ -105,8 +108,7 @@ export default function Signup() {
             type="number"
             errors={
               formik.touched.contact_number &&
-              (formik.errors.contact_number ||
-                (serverErrors && serverErrors.contact_number))
+              (formik.errors.contact_number || serverErrors.contact_number)
             }
             value={formik.values.contact_number}
             onChange={formik.handleChange}
@@ -117,8 +119,7 @@ export default function Signup() {
             type="password"
             errors={
               formik.touched.password &&
-              (formik.errors.password ||
-                (serverErrors && serverErrors.password))
+              (formik.errors.password || serverErrors.password)
             }
             value={formik.values.password}
             onChange={formik.handleChange}
@@ -129,8 +130,7 @@ export default function Signup() {
             type="password"
             errors={
               formik.touched.confirm_password &&
-              (formik.errors.confirm_password ||
-                (serverErrors && serverErrors.confirm_password))
+              (formik.errors.confirm_password || serverErrors.confirm_password)
             }
             value={formik.values.confirm_password}
             onChange={formik.handleChange}
@@ -140,8 +140,9 @@ export default function Signup() {
           <button
             type="submit"
             className="bg-[#6663e6] text-white py-2 rounded-sm mb-2"
+            disabled={isSubmitting} // Disable button during submission
           >
-            Register
+            {isSubmitting ? "Registering.." : "Register"}
           </button>
         </Form>
 
@@ -157,11 +158,4 @@ export default function Signup() {
       </div>
     </div>
   );
-}
-
-// Server-side action (if needed)
-export async function signupAction({ request }) {
-  const formData = await request.formData();
-  const data = Object.fromEntries(formData.entries());
-  return handleSignup(data);
 }

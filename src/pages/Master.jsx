@@ -1,9 +1,13 @@
 import Sidebar from "../components/Sidebar";
 import { menus } from "../menus";
-import { Link, Outlet } from "react-router-dom";
-import SearchField from "../components/SearchField";
+import { Link, Outlet, redirect, useLoaderData } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
+const apiUrl = process.env.REACT_APP_API_URL;
 
 export default function Master() {
+  const { data } = useLoaderData();
+
   return (
     <>
       <div className="min-h-screen mx-auto flex h-full">
@@ -26,7 +30,8 @@ export default function Master() {
               </li>
             </ul>
             <div>
-              <SearchField />
+              <i className="fa fa-user mr-2"></i>
+              {data.name}
             </div>
           </div>
           <div className="p-3 bg-[#ebeaea] min-h-screen">
@@ -36,4 +41,22 @@ export default function Master() {
       </div>
     </>
   );
+}
+
+export async function profilerLoader() {
+  const url = `${apiUrl}/profile`;
+  const accessToken = localStorage.getItem("accessToken");
+
+  console.log(accessToken);
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+  };
+
+  try {
+    const res = await axios.get(url, { headers });
+    return res.data;
+  } catch (err) {
+    toast.error("Please login to start your session.");
+    return redirect("/login");
+  }
 }
