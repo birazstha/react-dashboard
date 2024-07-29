@@ -3,7 +3,7 @@ import { menus } from "../menus";
 import { Link, Outlet, redirect, useLoaderData } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = process.env.REACT_APP_URL;
 
 export default function Master() {
   const { data } = useLoaderData();
@@ -46,8 +46,6 @@ export default function Master() {
 export async function profilerLoader() {
   const url = `${apiUrl}/profile`;
   const accessToken = localStorage.getItem("accessToken");
-
-  console.log(accessToken);
   const headers = {
     Authorization: `Bearer ${accessToken}`,
   };

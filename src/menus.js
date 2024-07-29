@@ -2,7 +2,7 @@ export const menus = [
   {
     title: 'Dashboard',
     path: '/',
-    icon: 'fa fa-user',
+    icon: 'fa fa-home',
   },
   {
     title: 'Friends',
@@ -14,6 +14,12 @@ export const menus = [
     title: 'Categories',
     path: '/categories',
     icon: 'fa fa-list',
+  },
+
+  {
+    title: 'Profile',
+    path: '/profile',
+    icon: 'fas fa-user',
   },
   {
     title: 'Logout',

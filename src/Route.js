@@ -9,7 +9,8 @@ import Signup from './pages/authentication/Signup';
 import ErrorPage from './pages/ErrorPage';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-const apiUrl = process.env.REACT_APP_API_URL;
+import Profile, {profileLoader1} from './pages/profile/Profile';
+const apiUrl = process.env.REACT_APP_URL;
 
 const router = createBrowserRouter ([
   {
@@ -30,6 +31,11 @@ const router = createBrowserRouter ([
         path: '/categories',
         element: <CategoryList />,
       },
+      {
+        path: '/profile',
+        element: <Profile />,
+        loader: profileLoader1,
+      },
     ],
   },
   {
@@ -40,6 +46,7 @@ const router = createBrowserRouter ([
     path: '/signup',
     element: <Signup />,
   },
+
   {
     path: '/logout',
     loader: async () => {

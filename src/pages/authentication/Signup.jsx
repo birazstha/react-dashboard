@@ -6,7 +6,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { basicSchema } from "../../schemas";
 
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = process.env.REACT_APP_URL;
 
 const handleSignup = async (data) => {
   const url = `${apiUrl}/signup`;

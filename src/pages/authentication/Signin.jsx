@@ -7,20 +7,21 @@ import {
   Form,
   useActionData,
   useNavigation,
-  redirect,
   useNavigate,
 } from "react-router-dom";
 import { useState } from "react";
 
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = process.env.REACT_APP_URL;
+const clientId = process.env.REACT_APP_CLIENT_ID;
+const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
 
 const handleSubmit = async (data) => {
   const url = `${apiUrl}/login`;
   data = {
     username: data.username,
     password: data.password,
-    clientId: "2",
-    clientSecret: "FX48j8OEDZW8nQqbl9uYZYA7JoMAcITB4JsuR6O1",
+    clientId: clientId,
+    clientSecret: clientSecret,
   };
 
   try {
@@ -43,13 +44,12 @@ const handleSubmit = async (data) => {
 };
 
 export default function Signin() {
-  const errorMessages = useActionData();
   const navigate = useNavigate();
   const [serverErrors, setServerErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
 
-  const errors = errorMessages?.errors || {};
   const navigation = useNavigation();
-  const isLogging = navigation.state === "submitting"; //submitting is default
+  const isLogging = navigation.state === "submitting";
 
   const formik = useFormik({
     initialValues: {
@@ -58,7 +58,9 @@ export default function Signin() {
     },
     validationSchema: loginSchema,
     onSubmit: async (values) => {
+      setSubmitting(true);
       const result = await handleSubmit(values);
+      setSubmitting(false);
       if (result.success) {
         navigate("/");
       } else {
@@ -106,7 +108,7 @@ export default function Signin() {
             className="bg-secondary text-white py-2 rounded-sm mb-2"
             disabled={isLogging}
           >
-            {isLogging ? "Logging In" : "Login"}
+            {submitting ? "Logging In" : "Login"}
           </button>
           <p className="mb-3">
             Don't have an account?{" "}
