@@ -5,8 +5,8 @@ export const menus = [
     icon: 'fa fa-home',
   },
   {
-    title: 'Friends',
-    path: '/friends',
+    title: 'Users',
+    path: '/users',
     icon: 'fa fa-users',
   },
 

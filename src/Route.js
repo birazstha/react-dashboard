@@ -1,6 +1,6 @@
 // route.js
 import {createBrowserRouter, redirect} from 'react-router-dom';
-import Friends from './components/Friends';
+import FriendList, {friendsLoader} from './pages/users/List';
 import Dashboard from './components/Dashboard';
 import Master, {profilerLoader} from './pages/Master';
 import CategoryList from './pages/categories/index';
@@ -24,8 +24,14 @@ const router = createBrowserRouter ([
         element: <Dashboard />,
       },
       {
-        path: '/friends',
-        element: <Friends />,
+        path: '/users',
+        children: [
+          {
+            index: true,
+            element: <FriendList />,
+            loader: friendsLoader,
+          },
+        ],
       },
       {
         path: '/categories',
